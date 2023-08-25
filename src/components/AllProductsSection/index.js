@@ -1,5 +1,5 @@
 import {Component} from 'react'
-import {Redirect, Link} from 'react-router-dom'
+
 import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
 

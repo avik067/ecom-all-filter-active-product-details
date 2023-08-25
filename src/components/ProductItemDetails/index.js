@@ -1,11 +1,10 @@
-// Write your code here
-
 import {useState, useEffect} from 'react'
 import Cookies from 'js-cookie'
 import Header from '../Header'
+import SimilarProductItem from '../SimilarProductItem'
 import './index.css'
 
-const ProductItemDetails = ({history, location, match}) => {
+const ProductItemDetails = ({match}) => {
   console.log('This is ProductItemDetails')
   const {params} = match
   const [memory, setMemory] = useState({
@@ -163,27 +162,7 @@ const ProductItemDetails = ({history, location, match}) => {
         <h1>Similar Products</h1>
         <ul className="row wrap">
           {memory.similarProduct.map(each => (
-            <li className="similar-item-container">
-              <img
-                className="similar-main-img"
-                src={each.imageUrl}
-                alt={each.title}
-              />
-              <h1 className="product-specific-heading">{each.title}</h1>
-              <p>by {each.brand}</p>
-              <br />
-              <div className="row apart align-center">
-                <p className="roboto bold">RS {price}/-</p>
-                <div className="rating-div-lower row  align-center">
-                  <div>{rating}</div>
-                  <img
-                    className="icon"
-                    src="https://assets.ccbp.in/frontend/react-js/star-img.png"
-                    alt="star"
-                  />
-                </div>
-              </div>
-            </li>
+            <SimilarProductItem each={each} />
           ))}
         </ul>
       </div>

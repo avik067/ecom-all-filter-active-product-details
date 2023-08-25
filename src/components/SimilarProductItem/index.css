@@ -1,1 +1,24 @@
 /* Write your CSS here */
+
+.lower-main {
+  padding: 20px;
+}
+.similar-item-container {
+  margin: 10px;
+}
+.similar-main-img {
+  height: 200px;
+}
+.product-specific-heading {
+  font-family: Roboto;
+  color: black;
+  font-weight: 600;
+  font-size: 15px;
+}
+.rating-div-lower {
+  height: 30px;
+  background-color: #3b82f6;
+  padding: 2px;
+  border-radius: 5px;
+  color: #ffffff;
+}
