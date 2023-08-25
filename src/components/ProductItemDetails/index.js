@@ -1,5 +1,5 @@
 // Write your code here
-import {Redirect, Link} from 'react-router-dom'
+
 import {useState, useEffect} from 'react'
 import Cookies from 'js-cookie'
 import Header from '../Header'
@@ -8,7 +8,11 @@ import './index.css'
 const ProductItemDetails = ({history, location, match}) => {
   console.log('This is ProductItemDetails')
   const {params} = match
-  const [memory, setMemory] = useState({mainProduct: {}, similarProduct: []})
+  const [memory, setMemory] = useState({
+    mainProduct: {},
+    similarProduct: [],
+  })
+  const [memory1, setMemory1] = useState(1)
 
   async function getData() {
     const {id} = params
@@ -38,8 +42,19 @@ const ProductItemDetails = ({history, location, match}) => {
         rating: jsonData.rating,
         availability: jsonData.availability,
       }
-      console.log(newObMain)
-      const similarObArr = jsonData.similar_products
+
+      const similarObArr = jsonData.similar_products.map(each => ({
+        id: each.id,
+        imageUrl: each.image_url,
+        title: each.title,
+        style: each.style,
+        price: each.price,
+        description: each.description,
+        brand: each.brand,
+        totalReviews: each.total_reviews,
+        rating: each.rating,
+        availability: each.availability,
+      }))
 
       setMemory({
         ...memory,
@@ -67,40 +82,118 @@ const ProductItemDetails = ({history, location, match}) => {
     availability,
   } = memory.mainProduct
 
-  return (
-    <>
-      <Header />
-      <div className="upper-main row ">
-        <div>
+  function upperRender() {
+    return (
+      <div className="upper-main row center wrap ">
+        <div className="main-specific-img">
           <img className="main-specific-img" src={imageUrl} alt={title} />
         </div>
 
-        <ul className="loweer-similar">
+        <ul className="right-description">
           <li>
-            <h1>{title}</h1>
+            <h1 className="product-specific-heading">{title}</h1>
           </li>
           <li>
-            <p>{price}</p>
+            <p className="roboto bold">RS {price}/-</p>
           </li>
-          <li className="row center align-center">
-            <div className="rating-div row ceneter align-center">
+          <li className="row  align-center">
+            <div className="rating-div row  align-center">
               <div>{rating}</div>
-              <div>
-                <img
-                  src="https://assets.ccbp.in/frontend/react-js/star-img.png"
-                  alt="star"
-                />
-              </div>
+              <img
+                className="icon"
+                src="https://assets.ccbp.in/frontend/react-js/star-img.png"
+                alt="star"
+              />
             </div>
             <p>{totalReviews} Reviews</p>
           </li>
           <li>
-            <p>{description}</p>
+            <p className="description-para">{description}</p>
           </li>
-          <li>Available: {availability}</li>
-          <li>Brand: {brand}</li>
+          <li>
+            <p>
+              <span className="bold">Available:</span>{' '}
+              <span className="description-para">{availability}</span>
+            </p>
+          </li>
+          <li>
+            <p>
+              <span className="bold">Brand:</span>{' '}
+              <span className="description-para">{brand}</span>
+            </p>
+          </li>
+          <li>
+            <hr />
+          </li>
+          <li>
+            <button
+              className="incre-but change"
+              type="button"
+              onClick={() => {
+                if (memory1 > 0) setMemory1(pre => pre - 1)
+              }}
+            >
+              -
+            </button>
+            <span className="quantity">{memory1}</span>
+            <button
+              className="decre-but change"
+              type="button"
+              onClick={() => {
+                setMemory1(pre => pre + 1)
+              }}
+            >
+              +
+            </button>
+          </li>
+          <li>
+            <br />
+            <button type="button" className="add-to-cart bold roboto">
+              ADD TO CART
+            </button>
+          </li>
         </ul>
       </div>
+    )
+  }
+
+  function lowerRender() {
+    return (
+      <div className="lower-main  ">
+        <h1>Similar Products</h1>
+        <ul className="row wrap">
+          {memory.similarProduct.map(each => (
+            <li className="similar-item-container">
+              <img
+                className="similar-main-img"
+                src={each.imageUrl}
+                alt={each.title}
+              />
+              <h1 className="product-specific-heading">{each.title}</h1>
+              <p>by {each.brand}</p>
+              <br />
+              <div className="row apart align-center">
+                <p className="roboto bold">RS {price}/-</p>
+                <div className="rating-div-lower row  align-center">
+                  <div>{rating}</div>
+                  <img
+                    className="icon"
+                    src="https://assets.ccbp.in/frontend/react-js/star-img.png"
+                    alt="star"
+                  />
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+  return (
+    <>
+      <Header />
+      {upperRender()}
+      {lowerRender()}
     </>
   )
 }

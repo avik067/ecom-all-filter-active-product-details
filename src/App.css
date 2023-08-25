@@ -20,10 +20,22 @@ body {
 .center {
   justify-content: center;
 }
+.apart {
+  justify-content: space-between;
+}
 .align-center {
   align-items: center;
 }
 
 li {
   list-style: none;
+}
+.bold {
+  font-weight: bold;
+}
+.roboto {
+  font-family: roboto;
+}
+.wrap {
+  flex-wrap: wrap;
 }

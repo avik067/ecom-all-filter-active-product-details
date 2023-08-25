@@ -1,6 +1,77 @@
-/* Write your CSS here */
-
+/* Upper  .................................................................................... */
+.upper-main {
+  padding: 20px;
+}
 .main-specific-img {
-  max-height: 200px;
-  max-width: 200px;
+  width: 50%;
+}
+.right-description {
+  width: 50%;
+}
+.main-specific-img {
+  height: 400px;
+  width: 400px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+.rating-div {
+  margin-right: 10px;
+  background-color: #3b82f6;
+  padding: 5px;
+  border-radius: 10px;
+  color: #ffffff;
+}
+.icon {
+  height: 20px;
+}
+.product-specific-heading {
+  font-family: Roboto;
+  color: #475569;
+  font-weight: 600;
+  font-size: 48px;
+}
+.description-para {
+  color: #475569;
+  font-weight: 500;
+}
+.change {
+  cursor: pointer;
+}
+.quantity {
+  font-weight: 700;
+  color: #475569;
+  margin-inline: 10px;
+}
+.add-to-cart {
+  background-color: #3b82f6;
+  padding: 10px;
+  border-radius: 2px;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+}
+
+/* Lower .......................................................................................*/
+
+.lower-main {
+  padding: 20px;
+}
+.similar-item-container {
+  margin: 10px;
+}
+.similar-main-img {
+  height: 200px;
+}
+.product-specific-heading {
+  font-family: Roboto;
+  color: black;
+  font-weight: 600;
+  font-size: 15px;
+}
+.rating-div-lower {
+  height: 30px;
+  background-color: #3b82f6;
+  padding: 2px;
+  border-radius: 5px;
+  color: #ffffff;
 }
