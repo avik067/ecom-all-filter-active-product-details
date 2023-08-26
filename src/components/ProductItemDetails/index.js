@@ -1,19 +1,31 @@
 import {useState, useEffect} from 'react'
+import {BsPlusSquare, BsDashSquare} from 'react-icons/bs'
 import Cookies from 'js-cookie'
+import Loader from 'react-loader-spinner'
 import Header from '../Header'
 import SimilarProductItem from '../SimilarProductItem'
 import './index.css'
 
-const ProductItemDetails = ({match}) => {
+const apiStatusConstants = {
+  initial: 'INITIAL',
+  success: 'SUCCESS',
+  failure: 'FAILURE',
+  inProgress: 'IN_PROGRESS',
+  notFound: 'not_Found',
+}
+
+const ProductItemDetails = ({history, match}) => {
   console.log('This is ProductItemDetails')
   const {params} = match
   const [memory, setMemory] = useState({
     mainProduct: {},
     similarProduct: [],
+    loadingStatus: apiStatusConstants.initial,
   })
   const [memory1, setMemory1] = useState(1)
 
   async function getData() {
+    setMemory({...memory, loadingStatus: apiStatusConstants.inProgress})
     const {id} = params
     const jwtToken = Cookies.get('jwt_token')
     const apiUrl = `https://apis.ccbp.in/products/${id}`
@@ -26,9 +38,8 @@ const ProductItemDetails = ({match}) => {
 
     const response = await fetch(apiUrl, options)
     const jsonData = await response.json()
-    console.log(jsonData)
 
-    if (response.ok) {
+    if (response.ok === true) {
       const newObMain = {
         id: jsonData.id,
         imageUrl: jsonData.image_url,
@@ -59,9 +70,15 @@ const ProductItemDetails = ({match}) => {
         ...memory,
         mainProduct: newObMain,
         similarProduct: similarObArr,
+        loadingStatus: apiStatusConstants.success,
       })
     } else {
-      console.log('No data Found try with different filter')
+      setMemory({
+        ...memory,
+        mainProduct: {},
+        similarProduct: [],
+        loadingStatus: apiStatusConstants.failure,
+      })
     }
   }
 
@@ -85,7 +102,7 @@ const ProductItemDetails = ({match}) => {
     return (
       <div className="upper-main row center wrap ">
         <div className="main-specific-img">
-          <img className="main-specific-img" src={imageUrl} alt={title} />
+          <img className="main-specific-img" src={imageUrl} alt="product" />
         </div>
 
         <ul className="right-description">
@@ -97,7 +114,9 @@ const ProductItemDetails = ({match}) => {
           </li>
           <li className="row  align-center">
             <div className="rating-div row  align-center">
-              <div>{rating}</div>
+              <div>
+                <p>{rating}</p>
+              </div>
               <img
                 className="icon"
                 src="https://assets.ccbp.in/frontend/react-js/star-img.png"
@@ -110,39 +129,41 @@ const ProductItemDetails = ({match}) => {
             <p className="description-para">{description}</p>
           </li>
           <li>
-            <p>
-              <span className="bold">Available:</span>{' '}
-              <span className="description-para">{availability}</span>
-            </p>
+            <div className="row align-center">
+              <p className="bold">Available:</p>
+              <p className="description-para">{availability}</p>
+            </div>
           </li>
           <li>
-            <p>
-              <span className="bold">Brand:</span>{' '}
-              <span className="description-para">{brand}</span>
-            </p>
+            <div className="row align-center">
+              <p className="bold">Brand: </p>
+              <p className="description-para">{brand}</p>
+            </div>
           </li>
           <li>
             <hr />
           </li>
-          <li>
+          <li className="row align-center">
             <button
               className="incre-but change"
               type="button"
+              data-testid="minus"
               onClick={() => {
-                if (memory1 > 0) setMemory1(pre => pre - 1)
+                if (memory1 > 1) setMemory1(pre => pre - 1)
               }}
             >
-              -
+              <BsDashSquare className="minus" />
             </button>
-            <span className="quantity">{memory1}</span>
+            <p className="quantity">{memory1}</p>
             <button
               className="decre-but change"
               type="button"
+              data-testid="plus"
               onClick={() => {
                 setMemory1(pre => pre + 1)
               }}
             >
-              +
+              <BsPlusSquare className="plus" />
             </button>
           </li>
           <li>
@@ -158,23 +179,72 @@ const ProductItemDetails = ({match}) => {
 
   function lowerRender() {
     return (
-      <div className="lower-main  ">
+      <div className="lower-main ">
         <h1>Similar Products</h1>
         <ul className="row wrap">
           {memory.similarProduct.map(each => (
-            <SimilarProductItem each={each} />
+            <SimilarProductItem each={each} key={each.id} />
           ))}
         </ul>
       </div>
     )
   }
-  return (
-    <>
-      <Header />
-      {upperRender()}
-      {lowerRender()}
-    </>
-  )
+
+  function loaderRender() {
+    return (
+      <div className="products-loader-container" data-testid="loader">
+        <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
+      </div>
+    )
+  }
+
+  function failureRender() {
+    return (
+      <div className="col center align-center">
+        <img
+          className="failure-img"
+          src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-error-view-img.png"
+          alt="failure view"
+        />
+        <h1>Product Not Found</h1>
+        <button
+          type="button"
+          className="add-to-cart bold roboto"
+          onClick={() => history.replace('/products')}
+        >
+          Continue Shopping
+        </button>
+      </div>
+    )
+  }
+
+  switch (memory.loadingStatus) {
+    case apiStatusConstants.success:
+      return (
+        <>
+          <Header />
+          {upperRender()}
+          {lowerRender()}
+        </>
+      )
+
+    case apiStatusConstants.inProgress:
+      return (
+        <>
+          <Header />
+          {loaderRender()}
+        </>
+      )
+    case apiStatusConstants.failure:
+      return (
+        <>
+          <Header /> {failureRender()}
+        </>
+      )
+
+    default:
+      return null
+  }
 }
 
 export default ProductItemDetails

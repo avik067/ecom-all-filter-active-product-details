@@ -7,7 +7,11 @@ const SimilarProductItem = props => {
 
   return (
     <li className="similar-item-container">
-      <img className="similar-main-img" src={each.imageUrl} alt={each.title} />
+      <img
+        className="similar-main-img"
+        src={each.imageUrl}
+        alt="similar product"
+      />
       <h1 className="product-specific-heading">{each.title}</h1>
       <p>by {each.brand}</p>
       <br />
